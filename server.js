@@ -27,7 +27,7 @@ const database = {
 }
 
 app.get('/', (req, res) => {
-    res.send('this works')
+    res.send(database.users)
 })
 
 // Sign In //
@@ -41,7 +41,18 @@ app.post('/signin', (req, res) => {
 })
 
 // Register //
-app.post('/register')
+app.post('/register', (req, res) => {
+    const { name, email, password } = req.body;
+    database.users.push({
+        id: '511',
+        name: name,
+        email: email,
+        password: password,
+        enties: 0,
+        joined: new Date()
+    })
+    res.json(database.users[database.users.length-1]);
+})
 
 app.listen(3000, ()=> {
     console.log('App running on port 3000');
