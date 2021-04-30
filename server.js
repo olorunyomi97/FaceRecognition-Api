@@ -1,8 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
+app.use(bodyParser.json());
 const database = {
+    // Dummy Database for now//
     users: [
         {
             id: '123',
@@ -27,10 +30,18 @@ app.get('/', (req, res) => {
     res.send('this works')
 })
 
-// SIGN IN //
+// Sign In //
 app.post('/signin', (req, res) => {
-    res.send('sign-in in progress')
+    if (req.body.email === database.users[0].email &&
+        req.body.password === database.users[0].password) {
+        res.json('success');
+    }else {
+        res.status(400).json('error signing in')
+    }
 })
+
+// Register //
+app.post('/register')
 
 app.listen(3000, ()=> {
     console.log('App running on port 3000');
