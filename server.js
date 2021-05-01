@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
 
 const app = express();
 
@@ -11,7 +12,6 @@ const database = {
             id: '123',
             name: 'Cole',
             email: 'cole@gmail.com',
-            password: 'bit',
             entries: 0,
             joined: new Date()
         },
@@ -19,10 +19,16 @@ const database = {
             id: '619',
             name: 'Chuck',
             email: 'chuck@gmail.com',
-            password: 'bits',
             entries: 0,
             joined: new Date()
         },
+    ],
+    login: [
+        {
+            id: '305',
+            hash: '',
+            email: 'cole@gmail.com'
+        }
     ]
 }
 
@@ -32,6 +38,13 @@ app.get('/', (req, res) => {
 
 // Sign In //
 app.post('/signin', (req, res) => {
+    // Load hash from your password DB.
+    bcrypt.compare("cheese", '$2a$10$A5ht3gNDnm/dPqrA6hxm6uMCbgtjZEYeU2qWtMiR2/E7lBu3.444q', function(err, res) {
+        console.log('first guess', res)
+    });
+    bcrypt.compare("veggies", '$2a$10$A5ht3gNDnm/dPqrA6hxm6uMCbgtjZEYeU2qWtMiR2/E7lBu3.444q', function(err, res) {
+        console.log('second guess', res)
+    });
     if (req.body.email === database.users[0].email &&
         req.body.password === database.users[0].password) {
         res.json('success');
@@ -43,6 +56,7 @@ app.post('/signin', (req, res) => {
 // Register //
 app.post('/register', (req, res) => {
     const { name, email, password } = req.body;
+  
     database.users.push({
         id: '511',
         name: name,
@@ -85,6 +99,18 @@ app.post('/image', (req,res) => {
         res.status(400).json('user not found');
     }
 })
+
+// bcrypt.hash(password, null, null, function(err, hash) {
+//     // Store hash in your password DB.
+//     console.log(hash)
+// });
+// // Load hash from your password DB.
+// bcrypt.compare("bacon", hash, function(err, res) {
+//     // res == true
+// });
+// bcrypt.compare("veggies", hash, function(err, res) {
+//     // res = false
+// });
 
 
 app.listen(3000, ()=> {
