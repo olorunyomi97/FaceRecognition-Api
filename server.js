@@ -12,7 +12,7 @@ const database = {
             name: 'Cole',
             email: 'cole@gmail.com',
             password: 'bit',
-            enties: 0,
+            entries: 0,
             joined: new Date()
         },
         {
@@ -20,7 +20,7 @@ const database = {
             name: 'Chuck',
             email: 'chuck@gmail.com',
             password: 'bits',
-            enties: 0,
+            entries: 0,
             joined: new Date()
         },
     ]
@@ -48,11 +48,44 @@ app.post('/register', (req, res) => {
         name: name,
         email: email,
         password: password,
-        enties: 0,
+        entries: 0,
         joined: new Date()
     })
     res.json(database.users[database.users.length-1]);
 })
+
+// Get UserID //
+app.get('/profile/:id', (req, res) => {
+    const { id } = req.params;
+    let found = false;
+    database.users.forEach(user => {
+        if (user.id === id) {
+            found = true;
+            return res.json(user);
+        }
+    })
+    if(!found) {
+        res.status(400).json('user not found');
+    }
+})
+
+
+// Get Image ID //
+app.post('/image', (req,res) => {
+    const { id } = req.body;
+    let found = false;
+    database.users.forEach(user => {
+        if (user.id === id) {
+            found = true;
+            user.entries++
+            return res.json(user.entries);
+        }
+    })
+    if(!found) {
+        res.status(400).json('user not found');
+    }
+})
+
 
 app.listen(3000, ()=> {
     console.log('App running on port 3000');
